@@ -42,6 +42,7 @@ def random_data_with_inter_corelations(features, noise_range=(0.1,0.35), size = 
 def random_data_simple_power_relation(size = 1500):
     non_related_data = np.random.randn(size, 2)
     data = np.zeros((size, 3))
+    data[:, :2] = non_related_data
     data[:, 2] = data[:, 0] * data[:, 1] * data[:, 1]
     return data
 

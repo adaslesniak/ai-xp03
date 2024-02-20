@@ -30,20 +30,21 @@ def linearity_check(data, optimization=1):
 
     # Perform pca and reconstruction
     n_features = data.shape[1]
-    pca = PCA(n_components=n_features)
+    pca = PCA(n_components=n_features-1)
     data_pca = pca.fit_transform(data)
     data_reconstructed = pca.inverse_transform(data_pca)
     reconstruction_error = mean_squared_error(data, data_reconstructed)
     
     # Normalize the reconstruction error to a preliminary linearity score.
     max_error = np.var(data) * 0.1  # Example maximum error based on data variance
-    normalized_error = min(reconstruction_error / max_error, 1)
+    normalized_error = min(reconstruction_error / (max_error + 1e-10), 1) #adding minimal value to avoid dividing by zero
     preliminary_score = 1 - normalized_error
     
     # Return normalized value
     beta = 4
     offset = 0.5
     adjusted_score = beta * (preliminary_score - offset)
+    print('reconstruction error: ', reconstruction_error)
     return 1 / (1 + np.exp(-adjusted_score * beta))   
 
 
