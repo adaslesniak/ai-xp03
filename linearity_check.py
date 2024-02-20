@@ -4,7 +4,6 @@ from sklearn.metrics import mean_squared_error
 from sklearn.utils import resample
 
 
-
 def linearity_check(data, optimization=1):
     """
     Evaluates the linearity of the dataset by performing PCA on a sampled subset,
@@ -30,11 +29,11 @@ def linearity_check(data, optimization=1):
 
     # Perform pca and reconstruction
     n_features = data.shape[1]
-    pca = PCA(n_components=n_features-1)
+    pca = PCA(n_components=n_features)
     data_pca = pca.fit_transform(data)
     data_reconstructed = pca.inverse_transform(data_pca)
     reconstruction_error = mean_squared_error(data, data_reconstructed)
-    
+    return reconstruction_error
     # Normalize the reconstruction error to a preliminary linearity score.
     max_error = np.var(data) * 0.1  # Example maximum error based on data variance
     normalized_error = min(reconstruction_error / (max_error + 1e-10), 1) #adding minimal value to avoid dividing by zero
